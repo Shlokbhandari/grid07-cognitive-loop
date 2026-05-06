@@ -43,3 +43,16 @@ Respond with ONLY a JSON object in this exact format:
         "topic": parsed["topic"],
         "search_query": parsed["search_query"]
     }
+
+
+def web_search(state: AgentState) -> AgentState:
+    """Node 2: Runs the mock search tool using the query from Node 1."""
+    from tools import mock_searxng_search
+
+    results = mock_searxng_search.invoke(state["search_query"])
+
+    return {
+        **state,
+        "search_results": results
+    }
+
