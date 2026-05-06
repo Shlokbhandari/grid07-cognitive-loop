@@ -43,7 +43,15 @@ cp .env.example .env
 ## Phases
 
 ### Phase 1: Vector-Based Persona Matching
-*Coming soon...*
+
+Each bot persona is embedded using `all-MiniLM-L6-v2` and stored in a FAISS in-memory vector store. When a new post arrives, it gets embedded and compared against all persona vectors using cosine similarity.
+
+```python
+route_post_to_bots("OpenAI just released a new model that might replace junior developers.")
+# → ['bot_a']  (Tech Maximalist matched, threshold = -0.25)
+```
+
+The threshold was tuned based on actual similarity scores produced by the embedding model. FAISS returns L2 distances which are converted to cosine similarity using: `cosine_sim = 1 - (l2_dist² / 2)`.
 
 ### Phase 2: Autonomous Content Engine (LangGraph)
 *Coming soon...*
