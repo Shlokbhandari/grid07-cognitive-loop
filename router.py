@@ -25,10 +25,10 @@ def route_post_to_bots(post_content: str, threshold: float = 0.50) -> list[str]:
 
 if __name__ == "__main__":
     post_1 = "OpenAI just released a new model that might replace junior developers."
-    matched_1 = route_post_to_bots(post_1, threshold=0.15)
+    matched_1 = route_post_to_bots(post_1, threshold=-0.25)
     print(f"Bots notified: {matched_1}")
     print("-" * 40)
     
     post_2 = "The Federal Reserve just announced a 50 basis point interest rate cut. Markets are rallying."
-    matched_2 = route_post_to_bots(post_2, threshold=0.15)
+    matched_2 = route_post_to_bots(post_2, threshold=-0.25)
     print(f"Bots notified: {matched_2}")
