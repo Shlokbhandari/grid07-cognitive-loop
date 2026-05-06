@@ -80,3 +80,49 @@ Respond ONLY with this JSON, no extra text:
         **state,
         "post_content": parsed["post_content"]
     }
+
+
+def build_graph():
+    from langgraph.graph import StateGraph, END
+
+    graph = StateGraph(AgentState)
+
+    graph.add_node("decide_search", decide_search)
+    graph.add_node("web_search", web_search)
+    graph.add_node("draft_post", draft_post)
+
+    graph.set_entry_point("decide_search")
+    graph.add_edge("decide_search", "web_search")
+    graph.add_edge("web_search", "draft_post")
+    graph.add_edge("draft_post", END)
+
+    return graph.compile()
+
+
+if __name__ == "__main__":
+    from personas import BOT_PERSONAS
+    import json
+
+    bot_id = "bot_a"
+    bot = BOT_PERSONAS[bot_id]
+
+    app = build_graph()
+
+    initial_state: AgentState = {
+        "bot_id": bot_id,
+        "persona": bot["persona"],
+        "search_query": "",
+        "search_results": "",
+        "post_content": "",
+        "topic": ""
+    }
+
+    print(f"Running content engine for: {bot['name']}\n")
+    result = app.invoke(initial_state)
+
+    output = {
+        "bot_id": result["bot_id"],
+        "topic": result["topic"],
+        "post_content": result["post_content"]
+    }
+    print(json.dumps(output, indent=2))
