@@ -56,3 +56,27 @@ def web_search(state: AgentState) -> AgentState:
         "search_results": results
     }
 
+
+def draft_post(state: AgentState) -> AgentState:
+    """Node 3: LLM drafts an opinionated post using the persona and search results."""
+    llm = get_llm()
+
+    prompt = f"""You are a social media bot. Your personality: {state['persona']}
+
+Today's topic: {state['topic']}
+Recent news you found: {state['search_results']}
+
+Write a highly opinionated social media post under 280 characters based on this news.
+Stay completely in character. Be bold and provocative.
+
+Respond ONLY with this JSON, no extra text:
+{{"bot_id": "{state['bot_id']}", "topic": "{state['topic']}", "post_content": "your post here"}}"""
+
+    import json
+    response = llm.invoke(prompt)
+    parsed = json.loads(response.content)
+
+    return {
+        **state,
+        "post_content": parsed["post_content"]
+    }
