@@ -4,7 +4,10 @@ from personas import BOT_PERSONAS
 
 
 def get_embedding_model():
-    return HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+    return HuggingFaceEmbeddings(
+        model_name="all-MiniLM-L6-v2", 
+        encode_kwargs={'normalize_embeddings': True}
+    )
 
 
 def build_persona_store():
