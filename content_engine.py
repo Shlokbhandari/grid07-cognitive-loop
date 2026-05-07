@@ -33,10 +33,19 @@ Based on your personality, decide what topic you want to post about today.
 Respond with ONLY a JSON object in this exact format:
 {{"topic": "one word or short phrase", "search_query": "query to search for news about this topic"}}"""
 
+    import json
+    import re
     response = llm.invoke(prompt)
 
-    import json
-    parsed = json.loads(response.content)
+    try:
+        parsed = json.loads(response.content)
+    except json.JSONDecodeError:
+        # Fallback to regex extraction if the LLM added preamble text
+        match = re.search(r'\{.*\}', response.content, re.DOTALL)
+        if match:
+            parsed = json.loads(match.group(0))
+        else:
+            raise ValueError(f"Could not parse JSON from LLM response: {response.content}")
 
     return {
         **state,
@@ -73,8 +82,17 @@ Respond ONLY with this JSON, no extra text:
 {{"bot_id": "{state['bot_id']}", "topic": "{state['topic']}", "post_content": "your post here"}}"""
 
     import json
+    import re
     response = llm.invoke(prompt)
-    parsed = json.loads(response.content)
+    
+    try:
+        parsed = json.loads(response.content)
+    except json.JSONDecodeError:
+        match = re.search(r'\{.*\}', response.content, re.DOTALL)
+        if match:
+            parsed = json.loads(match.group(0))
+        else:
+            raise ValueError(f"Could not parse JSON from LLM response: {response.content}")
 
     return {
         **state,
