@@ -20,12 +20,12 @@ def run_phase_1():
 
     test_post = "OpenAI just released a new model that might replace junior developers."
     print(f"Post: '{test_post}'")
-    matched = route_post_to_bots(test_post, threshold=-0.25)
+    matched = route_post_to_bots(test_post, threshold=0.20)
     print(f"Matched bots: {matched}")
 
     test_post_2 = "The Federal Reserve announced a 50 basis point interest rate cut. Markets are rallying."
     print(f"\nPost: '{test_post_2}'")
-    matched_2 = route_post_to_bots(test_post_2, threshold=-0.25)
+    matched_2 = route_post_to_bots(test_post_2, threshold=0.20)
     print(f"Matched bots: {matched_2}")
 
 
