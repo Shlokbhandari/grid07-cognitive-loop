@@ -3,3 +3,5 @@ __pycache__/
 *.pyc
 .venv/
 .DS_Store
+screenshots.nosync/
+test_harness.py
